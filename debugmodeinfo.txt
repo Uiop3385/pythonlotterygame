@@ -1,0 +1,3 @@
+Debug mode lets you choose a custom starting day, a custom starting amount of moners, and lets you directly unlock achievements, along with modifying how the game displays values and others.
+This feature was used to test all the features of the game without having to manually play it to reach a certain point of the game that I needed to test.
+To access it, in the main menu, enter a choice of 69.
