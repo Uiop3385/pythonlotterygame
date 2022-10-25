@@ -8,6 +8,9 @@ List of all errors ([E-0X] or [E-0Xx]):
   E-03a :
     Cause : Happens when an invalid choice is entered on the main menu.
     Fix : Enter a valid choice.
+  E-03b :
+    Cause : Happens when an invalid choice is entered on the ending screen.
+    Fix : Enter a valid choice.
   E-04 :
     Cause : Happens when a starting day value inferior to 1 is entered in debug mode.
     Fix : Enter a valid value that is superior to 0.
