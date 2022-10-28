@@ -172,19 +172,30 @@ def endGame(endReached, endDay):
         choice = int(input("Choice : "))
 def crybaby(day):
   print("\n\n")
+  global surrenderGuarantee
   crybaby = randint(7,30)
-  print("""Oops! You bought more than 25000 tickets! You get humiliated on Twitter by the lottery company! You end up spending the next""", crybaby, "days crying in bed!", end = "\n\n")
-  sleep(5)
-  for loop in range(crybaby):
-    print("You cry another day...")
-    sleep(0.25)
+  surrender = randint(1,1000)
+  if surrenderGuarantee == True:
+    surrender = 1
+  if surrender == 1:
+    print("""Oops! You bought more than 25000 tickets! You get humiliated on Twitter by the lottery company! You become extremely depressed from all the social pressure and surrender on life.""", end = "\n\n")
+    sleep(5)
+    print("""Congratulations! You got the ultra-rare easter egg! It's a very slim 0.1% chance of getting it, and you can't spam it like the lottery, so really, congrats! Well... now that you've surrendered, you can't actually play this game any further... I'm just gonna force quit the program so you don't have to, just re-execute it again! Also, I figured, to give you something for your achievement, try and type 69 in the menu you have when you first execute the program. This'll give you access to insane features! Anyways, bye!""")
+    sleep(15)
+    quit()
+  else:
+    print("""Oops! You bought more than 25000 tickets! You get humiliated on Twitter by the lottery company! You end up spending the next""", crybaby, "days crying in bed!", end = "\n\n")
+    sleep(5)
+    for loop in range(crybaby):
+      print("You cry another day...")
+      sleep(0.25)
+      day += 1
     day += 1
-  day += 1
-  dayDisplay = day + 1
-  print("\n\n")
-  print("Returning to day menu on day", dayDisplay, end = "\n\n\n\n")
-  sleep(0.5)
-  dayStart(day)
+    dayDisplay = day + 1
+    print("\n\n")
+    print("Returning to day menu on day", dayDisplay, end = "\n\n\n\n")
+    sleep(0.8)
+    dayStart(day)
 def init():
   global moners
   moners = randint(100,250)
@@ -225,6 +236,8 @@ def init():
       print("Invalid value [E-06]")
       moners = float(input("Overwrite your moners to : "))
     int(moners)
+    global surrenderGuarantee
+    surrenderGuarantee = bool(input("Guarantee surrender? (True or False) : "))
     print("\n\n\n")
     dayStart(startingDay)
   else:
