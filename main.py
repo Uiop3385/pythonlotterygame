@@ -60,6 +60,7 @@ def lotteryPlay(ID, day):
     print("Newbie Lottery selected.", end = "\n\n")
     print("Ticket price : 1 $M")
     print("Jackpot value :", jackpotNL, "$M")
+    print("Ticket limit : 25000 tprd")
     print("Jackpot chance : 0.5%", end = "\n\n")
     print("Would you like to :", end = "\n\n")
     print("1 - Play the Newbie Lottery")
@@ -92,6 +93,8 @@ def lotteryBuy(ID, day):
           sleep(1)
           print("\n\n\n")
           lotteryBuy("9F", day)
+        elif purchaseAmount > 25000:
+          crybaby(day)
         else:
           moners += -price
           print("\n\n")
@@ -113,6 +116,7 @@ def lotteryRoll(ID, ticketAmount, day):
   winTotal = 0
   JPcount = 0
   rollCount = 0
+  profit = 0
   if ID == "9F":
     global jackpotNL
     for i in range(ticketAmount):
@@ -124,8 +128,9 @@ def lotteryRoll(ID, ticketAmount, day):
       else:
         print("Nothing won on roll", rollCount,"/",ticketAmount, ", roll landed on", roll)
     winTotal = JPcount * jackpotNL
+    profit = winTotal - ticketAmount * 1
     print("\n\n")
-    print(ticketAmount, "rolls completed! Jackpots won :", JPcount,"for total earnings of", winTotal, "$M!")
+    print(ticketAmount, "rolls completed! Jackpots won :", JPcount,"for total earnings of", winTotal, "$M, totalling up to a profit of", profit, "M$!")
     sleep(2)
     print("Day completed, returning to menu.")
     sleep(1)
@@ -165,6 +170,21 @@ def endGame(endReached, endDay):
       while choice != 1 or choice != 2:
         print("Invalid choice [E-03b]")
         choice = int(input("Choice : "))
+def crybaby(day):
+  print("\n\n")
+  crybaby = randint(7,30)
+  print("""Oops! You bought more than 25000 tickets! You get humiliated on Twitter by the lottery company! You end up spending the next""", crybaby, "days crying in bed!", end = "\n\n")
+  sleep(5)
+  for loop in range(crybaby):
+    print("You cry another day...")
+    sleep(0.25)
+    day += 1
+  day += 1
+  dayDisplay = day + 1
+  print("\n\n")
+  print("Returning to day menu on day", dayDisplay, end = "\n\n\n\n")
+  sleep(0.5)
+  dayStart(day)
 def init():
   global moners
   moners = randint(100,250)
