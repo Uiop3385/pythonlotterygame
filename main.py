@@ -175,8 +175,10 @@ def crybaby(day):
   global surrenderGuarantee
   crybaby = randint(7,30)
   surrender = randint(1,1000)
-  if surrenderGuarantee == True:
+  if surrenderGuarantee == "Y":
     surrender = 1
+  elif surrenderGuarantee == "N":
+    surrender = randint(1,1000)
   if surrender == 1:
     print("""Oops! You bought more than 25000 tickets! You get humiliated on Twitter by the lottery company! You become extremely depressed from all the social pressure and surrender on life.""", end = "\n\n")
     sleep(5)
@@ -237,7 +239,7 @@ def init():
       moners = float(input("Overwrite your moners to : "))
     int(moners)
     global surrenderGuarantee
-    surrenderGuarantee = bool(input("Guarantee surrender? (True or False) : "))
+    surrenderGuarantee = str(input("Guarantee surrender? (Y or N) : "))
     print("\n\n\n")
     dayStart(startingDay)
   else:
