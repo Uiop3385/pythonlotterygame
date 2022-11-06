@@ -1,6 +1,9 @@
 from random import *
 from time import *
-def dayStart(currentDay):
+from uuid import *
+def dayStart(currentDay, generated):
+  global debugMode
+  global dayIDstorage
   currentDay += 1
   if currentDay > 365 or currentDay > 365.0:
     endGame(True, 365)
@@ -18,22 +21,30 @@ def dayStart(currentDay):
   print("2 - Work for $M")
   print("3 - Skip day")
   print("4 - End this game", end = "\n\n")
+  if debugMode == True:
+    display = uuid1()
+    print("Day ID :", display, end = "\n\n")
+    dayIDstorage.append(display)
   choice = int(input("Choice : "))
   if choice == 1:
     print("\n\n\n")
-    lotteryChoice(currentDay)
+    if generated == False:
+      lotteryChoice(currentDay, False)
+    else:
+      lotteryChoice(currentDay, True)
   elif choice == 2:
     print("\n\n\n")
     workChoice()
   elif choice == 3:
     print("\n\n\n")
-    dayStart(currentDay)
+    dayStart(currentDay, False)
   elif choice == 4:
     print("\n\n\n")
     endGame(False, currentDay)
   else:
     print("Invalid choice [E-03f]")
-def lotteryChoice(day):
+    sleep(3)
+def lotteryChoice(day, generated):
   print("To choose a lottery, enter it's ID.", end = "\n\n")
   print("Return - FF")
   print("Newbie Lottery - 9F")
@@ -45,20 +56,28 @@ def lotteryChoice(day):
   if choice == "FF":
     print("\n\n\n")
     day += -1
-    dayStart(day)
+    dayStart(day, True)
   elif choice == "9F" or choice == "7C" or choice == "4B" or choice == "1A" or choice == "00":
     print("\n\n\n")
-    lotteryPlay(choice, day)
+    if generated == False:
+      lotteryPlay(choice, day, False)
+    else:
+      lotteryPlay(choice, day, True)
   else:
     print("Invalid choice [E-03c]")
+    sleep(3)
 def workChoice():
   print("wip work")
-def lotteryPlay(ID, day):
+def lotteryPlay(ID, day, generated):
   if ID == "9F":
     global jackpotNL
-    jackpotNL = randint(1000, 2000)
+    global NLticketPrice
+    if generated == False:
+      jackpotNL = randint(1000, 2000)
+      NLticketPrice = uniform(1, 2)
+      NLticketPrice = round(NLticketPrice, 2)
     print("Newbie Lottery selected.", end = "\n\n")
-    print("Ticket price : 1 $M")
+    print("Ticket price :", NLticketPrice, "$M")
     print("Jackpot value :", jackpotNL, "$M")
     print("Ticket limit : 25000 tprd")
     print("Jackpot chance : 0.5%", end = "\n\n")
@@ -71,16 +90,19 @@ def lotteryPlay(ID, day):
       lotteryBuy(ID, day)
     elif choice == 2:
       print("\n\n\n")
-      lotteryChoice(day)
+      lotteryChoice(day, True)
     else:
       print("Invalid choice [E-03d]")
+      sleep(3)
 def lotteryBuy(ID, day):
   global moners
   if ID == "9F":
-    print("Ticket price : 1 $M, current balance :", moners, "M$", end = "\n\n")
+    global NLticketPrice
+    print("Ticket price :", NLticketPrice, "$M, current balance :", moners, "M$", end = "\n\n")
     purchaseAmount = int(input("How many tickets would you like to buy? "))
     if purchaseAmount > 0:
-      price = purchaseAmount * 1
+      price = purchaseAmount * NLticketPrice
+      price = round(price)
       print("\n\n\n")
       print("This will cost you", price, "$M. Current balance :", moners, "$M. Are you sure you want to continue?", end = "\n\n")
       print("1 - Yes")
@@ -106,11 +128,13 @@ def lotteryBuy(ID, day):
           lotteryRoll("9F", purchaseAmount, day)
       if choice == 2:
         print("\n\n\n")
-        lotteryPlay("9F", day)
+        lotteryPlay("9F", day, True)
       else:
         print("Invalid choice [E-03e]")
+        sleep(3)
     else:
       print("Invalid ticket value [E-08]")
+      sleep(3)
 def lotteryRoll(ID, ticketAmount, day):
   global moners
   winTotal = 0
@@ -119,6 +143,8 @@ def lotteryRoll(ID, ticketAmount, day):
   profit = 0
   if ID == "9F":
     global jackpotNL
+    global NLticketPrice
+    NLticketPrice = round(NLticketPrice)
     for i in range(ticketAmount):
       rollCount += 1
       roll = randint(1, 500)
@@ -128,7 +154,7 @@ def lotteryRoll(ID, ticketAmount, day):
       else:
         print("Nothing won on roll", rollCount,"/",ticketAmount, ", roll landed on", roll)
     winTotal = JPcount * jackpotNL
-    profit = winTotal - ticketAmount * 1
+    profit = winTotal - ticketAmount * NLticketPrice
     print("\n\n")
     print(ticketAmount, "rolls completed! Jackpots won :", JPcount,"for total earnings of", winTotal, "$M, totalling up to a profit of", profit, "M$!")
     sleep(2)
@@ -136,11 +162,15 @@ def lotteryRoll(ID, ticketAmount, day):
     sleep(1)
     moners += winTotal
     print("\n\n\n")
-    dayStart(day)
+    dayStart(day, False)
 def endGame(endReached, endDay):
+  global dayIDstorage
+  global debugMode
   if endReached == False:
     print("Game ended early on day", endDay)
     print("Total moners :", moners, "$M")
+    if debugMode == True:
+      print("Day IDs :", dayIDstorage)
     print("Would you like to play again?", end = "\n\n")
     print("1 - Yes")
     print("2 - No", end = "\n\n")
@@ -151,12 +181,13 @@ def endGame(endReached, endDay):
     elif choice == 2:
       quit()
     else:
-      while choice != 1 or choice != 2:
         print("Invalid choice [E-03b]")
-        choice = int(input("Choice : "))
+        sleep(3)
   else:
     print("You have completed this year!")
     print("Total moners :", moners, "$M")
+    if debugMode == True:
+      print("Day IDs :", dayIDstorage)
     print("Would you like to play again?", end = "\n\n")
     print("1 - Yes")
     print("2 - No", end = "\n\n")
@@ -167,9 +198,8 @@ def endGame(endReached, endDay):
     elif choice == 2:
       quit()
     else:
-      while choice != 1 or choice != 2:
         print("Invalid choice [E-03b]")
-        choice = int(input("Choice : "))
+        sleep(3)
 def crybaby(day):
   print("\n\n")
   global surrenderGuarantee
@@ -197,8 +227,10 @@ def crybaby(day):
     print("\n\n")
     print("Returning to day menu on day", dayDisplay, end = "\n\n\n\n")
     sleep(0.8)
-    dayStart(day)
+    dayStart(day, False)
 def init():
+  global debugMode
+  debugMode = False
   global moners
   moners = randint(100,250)
   print("Welcome! You have a starting budget of", moners, "$M.", end = "\n\n")
@@ -208,11 +240,14 @@ def init():
   choice = int(input("Choice : "))
   if choice == 1:
     print("\n\n\n")
-    dayStart(0)
+    dayStart(0, False)
   elif choice == 2:
     print("\n\n\n")
     #write tutorial here
   elif choice == 69:
+    debugMode = True
+    global dayIDstorage
+    dayIDstorage = []
     print("\n\n\n")
     print("Debug mode enabled")
     startingDay = float(input("Enter a custom starting day : "))
@@ -241,7 +276,8 @@ def init():
     global surrenderGuarantee
     surrenderGuarantee = str(input("Guarantee surrender? (Y or N) : "))
     print("\n\n\n")
-    dayStart(startingDay)
+    dayStart(startingDay, False)
   else:
       print("Invalid choice [E-03a]")
+      sleep(3)
 init()
