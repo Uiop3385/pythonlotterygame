@@ -1,6 +1,8 @@
 from random import *
 from time import *
 from uuid import *
+import os
+import hashlib
 def dayStart(currentDay, generated):
   global debugMode
   global dayIDstorage
@@ -20,8 +22,11 @@ def dayStart(currentDay, generated):
   print("1 - Play the lottery")
   print("2 - Work for $M")
   print("3 - Skip day")
-  print("4 - End this game", end = "\n\n")
+  print("4 - End this game")
+  if debugMode == False:
+    print("5 - Save Game", end = "\n\n")
   if debugMode == True:
+    print("\n")
     display = uuid1()
     print("Day ID :", display, end = "\n\n")
     dayIDstorage.append(display)
@@ -41,6 +46,12 @@ def dayStart(currentDay, generated):
   elif choice == 4:
     print("\n\n\n")
     endGame(False, currentDay)
+  elif debugMode == False and choice == 5:
+    print("\n\n\n")
+    if generated == False:
+      dataSave(currentDay, False)
+    else:
+      dataSave(currentDay, True)
   else:
     print("Invalid choice [E-03f]")
     sleep(3)
@@ -129,9 +140,6 @@ def lotteryBuy(ID, day):
       if choice == 2:
         print("\n\n\n")
         lotteryPlay("9F", day, True)
-      else:
-        print("Invalid choice [E-03e]")
-        sleep(3)
     else:
       print("Invalid ticket value [E-08]")
       sleep(3)
@@ -228,6 +236,53 @@ def crybaby(day):
     print("Returning to day menu on day", dayDisplay, end = "\n\n\n\n")
     sleep(0.8)
     dayStart(day, False)
+def dataSave(day, generated):
+  if not os.path.exists("savefiles"):
+    print("""No saves folder found. Would you like to create one? By proceeding, you agree for the game to read, write and delete files located in that folder. The folder will be created in the directory the game is running from.""", end = "\n\n")
+    print("1 - Yes")
+    print("2 - Cancel and return to day", end = "\n\n")
+    choice = int(input("Choice : "))
+    if choice == 1:
+      os.makedirs("savefiles/1/2/3")
+      create = open("savefiles/1/slot1.uiop", "wb")
+      create.write("Do not modify this file. \n".encode())
+      create.close()
+      create = open("savefiles/1/slot1c.uiop", "xb")
+      create.close()
+      create = open("savefiles/1/2/slot2.uiop", "wb")
+      create.write("Do not modify this file. \n".encode())
+      create.close()
+      create = open("savefiles/1/2/slot2c.uiop", "xb")
+      create.close()
+      create = open("savefiles/1/2/3/slot3.uiop", "wb")
+      create.write("Do not modify this file. \n".encode())
+      create.close()
+      create = open("savefiles/1/2/3/slot3c.uiop", "xb")
+      create.close()
+      print("\n")
+      print("Successfully created folder and slots!")
+      sleep(2)
+      print("\n\n\n")
+      dataSave(day, generated)
+    elif choice == 2:
+      print("\n\n\n")
+      day += -1
+      dayStart(day, generated)
+    else:
+      print("Invalid choice [E-03g]")
+      sleep(3)
+  else:
+    print("Which slot would you like to save this game to?", end = "\n\n")
+    print("1 - Slot 1")
+    print("2 - Slot 2")
+    print("3 - Slot 3")
+    print("4 - Return to day", end = "\n\n")
+    choices = (1, 2, 3, 4)
+    choice = int(input("Choice : "))
+    if choice not in choices:
+      print("\n")
+      print("Invalid choice [E-03h]")
+      sleep(3)
 def init():
   global debugMode
   debugMode = False

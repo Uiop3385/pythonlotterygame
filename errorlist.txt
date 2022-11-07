@@ -19,8 +19,7 @@ Note that E-03x errors and E-08 error terminate the program.
     Cause : Happens when an invalid choice is entered on the lottery info menu.
     Fix : Enter a valid choice.
   E-O3e :
-    Cause : Happens when an invalid choice is entered on the lottery purchase confirmation menu.
-    Fix : Enter a valid choice.
+    Does not exist
   E-03f :
     Cause : Happens when an invalid choice is entered on the day menu.
     Fix : Enter a valid choice.
