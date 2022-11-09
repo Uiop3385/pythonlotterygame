@@ -1,11 +1,13 @@
 List of all errors ([E-0X] or [E-0Xx]):
 Note that E-03x errors and E-08 error terminate the program.
+  E-00 :
+    No support provided for this error.
   E-01 : 
     Cause : Happens when a starting day value superior to 365 is entered in debug mode.
     Fix : Enter a valid value, that is not higher than 365.
   E-02 :
-    Cause : Happens when a moners value superior to 999999999999999999 is entered in debug mode.
-    Fix : Enter a valid value, that remains below 999999999999999999.
+    Cause : Happens when a moners value superior to 999999999999999999999999999999 is entered in debug mode.
+    Fix : Enter a valid value, that remains below 999999999999999999999999999999.
   E-03a :
     Cause : Happens when an invalid choice is entered on the main menu.
     Fix : Enter a valid choice.

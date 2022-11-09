@@ -3,6 +3,8 @@ from time import *
 from uuid import *
 import os
 import hashlib
+import base64
+import codecs
 def dayStart(currentDay, generated):
   global debugMode
   global dayIDstorage
@@ -152,7 +154,6 @@ def lotteryRoll(ID, ticketAmount, day):
   if ID == "9F":
     global jackpotNL
     global NLticketPrice
-    NLticketPrice = round(NLticketPrice)
     for i in range(ticketAmount):
       rollCount += 1
       roll = randint(1, 500)
@@ -237,6 +238,7 @@ def crybaby(day):
     sleep(0.8)
     dayStart(day, False)
 def dataSave(day, generated):
+  global debugModeX
   if not os.path.exists("savefiles"):
     print("""No saves folder found. Would you like to create one? By proceeding, you agree for the game to read, write and delete files located in that folder. The folder will be created in the directory the game is running from.""", end = "\n\n")
     print("1 - Yes")
@@ -244,21 +246,36 @@ def dataSave(day, generated):
     choice = int(input("Choice : "))
     if choice == 1:
       os.makedirs("savefiles/1/2/3")
+      if debugModeX == True:
+        print("Created folder at location", os.getcwd())
       create = open("savefiles/1/slot1.uiop", "wb")
+      if debugModeX == True:
+        print("Created file at location ", os.getcwd(), "/savefiles/1/slot1.uiop", sep = "")
       create.write("Do not modify this file. \n".encode())
       create.close()
       create = open("savefiles/1/slot1c.uiop", "xb")
+      if debugModeX == True:
+        print("Created file at location ", os.getcwd(), "/savefiles/1/slot1c.uiop", sep = "")
       create.close()
       create = open("savefiles/1/2/slot2.uiop", "wb")
+      if debugModeX == True:
+        print("Created file at location ", os.getcwd(), "/savefiles/1/2/slot2.uiop", sep = "")
       create.write("Do not modify this file. \n".encode())
       create.close()
       create = open("savefiles/1/2/slot2c.uiop", "xb")
+      if debugModeX == True:
+        print("Created file at location ", os.getcwd(), "/savefiles/1/2/slot2c.uiop", sep = "")
       create.close()
       create = open("savefiles/1/2/3/slot3.uiop", "wb")
+      if debugModeX == True:
+        print("Created file at location ", os.getcwd(), "/savefiles/1/2/3/slot3.uiop", sep = "")
       create.write("Do not modify this file. \n".encode())
       create.close()
       create = open("savefiles/1/2/3/slot3c.uiop", "xb")
+      if debugModeX == True:
+        print("Created file at location ", os.getcwd(), "/savefiles/1/2/3/slot3c.uiop", sep = "")
       create.close()
+      sleep(1.5)
       print("\n")
       print("Successfully created folder and slots!")
       sleep(2)
@@ -273,19 +290,59 @@ def dataSave(day, generated):
       sleep(3)
   else:
     print("Which slot would you like to save this game to?", end = "\n\n")
+    if debugModeX == True:
+      print("0 - Debug Saving")
     print("1 - Slot 1")
     print("2 - Slot 2")
     print("3 - Slot 3")
     print("4 - Return to day", end = "\n\n")
-    choices = (1, 2, 3, 4)
+    choices = (0, 1, 2, 3, 4)
     choice = int(input("Choice : "))
     if choice not in choices:
       print("\n")
       print("Invalid choice [E-03h]")
       sleep(3)
+    elif choice == 0 and debugModeX == True:
+      print("Debug Saving enabled")
+      writeSave(choice, generated, day)
+    elif choice == 4:
+      print("\n\n\n")
+      dayStart(day, generated)
+    else:
+      print("\n")
+      path = os.getcwd()
+      if choice == 1:
+        path = path + "/savefiles/1/slot1.uiop"
+      elif choice == 2:
+        path = path + "/savefiles/1/2/slot2.uiop"
+      else:
+        path = path + "/savefiles/1/2/3/slot3.uiop"
+      size = os.path.getsize(path)
+      warning = str(input("Beware! All data on slot "+str(choice)+" will be overwritten! Are you sure you wish to proceed? There are currently "+str(size)+" bytes on the file. Enter Yes to proceed or No to cancel : "))
+      if warning == "Yes":
+        print("\n\n\n")
+        writeSave(choice, generated, day)
+      else:
+        print("Reloading menu...")
+        print("\n\n\n")
+        dataSave(day, generated)
+def writeSave(slot, generated, day):
+  global moners
+  if slot == 0:
+    print("wip")
+  else:
+    magic = 'cHJpbnQoIldyaXRpbmcgZGF0YSB0byBzbG90Iiwgc2xvdCwgIi4uLiIpDQppZiBzbG90ID09IDE6DQogIGZpbGVwYXRoID0gInNhdmVmaWxlcy8iK3N0cihzbG90KSsiL3Nsb3QiK3N0cihzbG90KSsiLnVpb3AiDQogIGZpbGVwYXRoQyA9ICJzYXZlZmlsZXMvIitzdHIoc2xvdCkrIi9zbG90IitzdHIoc2xvdCkrImMudWlvcCINCmVsaWYgc2xvdCA9PSAyOg0KICBmaWxlcGF0aCA9ICJzYXZlZmlsZXMvMS8iK3N0cihzbG90KSsiL3Nsb3QiK3N0cihzbG90KSsiLnVpb3AiDQogIGZpbGVwYXRoQyA9ICJzYXZlZmlsZXMvMS8iK3N0cihzbG90KSsiL3Nsb3QiK3N0cihzbG90KSsiYy51aW9wIg0KZWxzZTo'
+    love = 'APvNtMzyfMKOuqTttCFNvp2S2MJMcoTImYmRiZv8vX3A0pvumoT90XFfvY3Afo3DvX3A0pvumoT90XFfvYaIco3NvQDbtVTMcoTIjLKEbDlN9VPWmLKMyMzyfMKZiZF8lYlVep3ElXUAfo3DcXlVip2kiqPVep3ElXUAfo3DcXlWwYaIco3NvQDc2LJk1MFN9VT1iozIlpj0XqzSfqJHlVQ0tMTS5QDc2LJk1MFN9VTyhqPu2LJk1MFxAPaMuoUIyZvN9VTyhqPu2LJk1MGVcQDc2LJk1MFN9VTuyrPu2LJk1MFxAPaMuoUIyZvN9VTuyrPu2LJk1MGVcQDcxLKEuVQ0to3OyovuznJkypTS0nPjtVaqvVvxAPzEuqTRhq3WcqTHbVxEiVT5iqPOgo2EcMaxtqTucplOznJkyYvOpovVhMJ5wo2EyXPxcQDcxLKEuYaqlnK'
+    god = 'RlKHZhbHVlLmVuY29kZSgpKQ0KZGF0YS53cml0ZSgiXG4iLmVuY29kZSgpKQ0KZGF0YS53cml0ZSh2YWx1ZTIuZW5jb2RlKCkpDQpkYXRhLmNsb3NlKCkNCmRhdGEgPSBvcGVuKGZpbGVwYXRoLCAicmIiKQ0KZGF0YV9yZWFkID0gZGF0YS5yZWFkKCkNCmhhc2hlZF9zdHJpbmcgPSBoYXNobGliLnNoYTI1NihkYXRhX3JlYWQpLmhleGRpZ2VzdCgpDQpkYXRhLmNsb3NlKCkNCmRhdGEgPSBvcGVuKGZpbGVwYXRoQywgIndiIikNCmRhdGEud3JpdGUoaGFzaGVkX3N0cmluZy5lbmNvZGUoKSkNCmRhdGEuY2xvc2UoKQ0KcGF0aCA9IG9zLmdldGN3ZCgpDQppZiBzbG90ID09IDE6DQogIHBhdGggPSBwYXRoI'
+    destiny = 'PftVv9mLKMyMzyfMKZiZF9moT90ZF51nJ9jVt0XMJkcMvOmoT90VQ09VQV6QDbtVUOuqTttCFOjLKEbVPftVv9mLKMyMzyfMKZiZF8lY3Afo3DlYaIco3NvQDcyoUAyBt0XVPOjLKEbVQ0tpTS0nPNeVPVip2S2MJMcoTImYmRiZv8mY3Afo3DmYaIco3NvQDcmnKcyVQ0to3ZhpTS0nP5aMKEmnKcyXUOuqTtcQDcjpzyhqPtvH3IwL2Imp2M1oTk5VUqlo3EyVvjtp2y6MFjtVzW5qTImVUEiVUAfo3DvYPOmoT90XD0Xp2kyMKNbZvxAPaOlnJ50XPWFMKE1pz5cozptqT8toJIhqF4hYvVcQDcmoTIypPtjYwp1XD0XpUWcoaDbVykhKT5povVcQDcxLKxtXm0tYGRAPzEurIA0LKW0XTEurFjtM2IhMKWuqTIxXD=='
+    joy = '\x72\x6f\x74\x31\x33'
+    trust = eval('\x6d\x61\x67\x69\x63') + eval('\x63\x6f\x64\x65\x63\x73\x2e\x64\x65\x63\x6f\x64\x65\x28\x6c\x6f\x76\x65\x2c\x20\x6a\x6f\x79\x29') + eval('\x67\x6f\x64') + eval('\x63\x6f\x64\x65\x63\x73\x2e\x64\x65\x63\x6f\x64\x65\x28\x64\x65\x73\x74\x69\x6e\x79\x2c\x20\x6a\x6f\x79\x29')
+    eval(compile(base64.b64decode(eval('\x74\x72\x75\x73\x74')),'<string>','exec'))
 def init():
   global debugMode
   debugMode = False
+  global debugModeX
+  debugModeX = False
   global moners
   moners = randint(100,250)
   print("Welcome! You have a starting budget of", moners, "$M.", end = "\n\n")
@@ -318,7 +375,7 @@ def init():
       int(startingDay)
     startingDay += -1
     moners = float(input("Overwrite your moners to : "))
-    while moners > 999999999999999999:
+    while moners > 999999999999999999999999999999:
       print("Overflow limit reached [E-02]")
       moners = float(input("Overwrite your moners to : "))
     while moners < 0:
@@ -330,6 +387,17 @@ def init():
     int(moners)
     global surrenderGuarantee
     surrenderGuarantee = str(input("Guarantee surrender? (Y or N) : "))
+    if surrenderGuarantee == "X":
+      debugMode = False
+      # and yes this code is secret and will never be open-sourced to make sure to prevent anyone from accessing Debug Mode X
+      magic = 'Y29kZSA9IGludChpbnB1dCgiRW50ZXIgYWNjZXNzIGNvZGUgOiAiKSkNCmNvZGUgPSBvY3QoY29kZSkNCmNvZGUgP'
+      love = 'FOmqUVbL29xMFxAPzyzVTAiMTHtCG0tVwOiZGD3AGNjZGHlZFV6QDbtVTqfo2WuoPOxMJW1M01iMTILQDbtVTEyLa'
+      god = 'VnTW9kZVggPSBUcnVlDQogIGRlYnVnTW9kZSA9IEZhbHNlDQogIHByaW50KCJEZWJ1ZyBNb2RlIFggRW5hYmxlZCI'
+      destiny = 'cQDcyoUAyBt0XVPOjpzyhqPtvFJ5wo3WlMJA0VTAiMTHuVSgSYGNjKFVcQDbtVUAfMJIjXQZcQDbtVUS1nKDbXD=='
+      joy = '\x72\x6f\x74\x31\x33'
+      trust = eval('\x6d\x61\x67\x69\x63') + eval('\x63\x6f\x64\x65\x63\x73\x2e\x64\x65\x63\x6f\x64\x65\x28\x6c\x6f\x76\x65\x2c\x20\x6a\x6f\x79\x29') + eval('\x67\x6f\x64') + eval('\x63\x6f\x64\x65\x63\x73\x2e\x64\x65\x63\x6f\x64\x65\x28\x64\x65\x73\x74\x69\x6e\x79\x2c\x20\x6a\x6f\x79\x29')
+      eval(compile(base64.b64decode(eval('\x74\x72\x75\x73\x74')),'<string>','exec'))
+      debugModeX = True
     print("\n\n\n")
     dayStart(startingDay, False)
   else:
