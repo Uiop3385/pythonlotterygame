@@ -5,6 +5,8 @@ import os
 import hashlib
 import base64
 import codecs
+import colorama
+gameVersion = "0.3.0"
 def dayStart(currentDay, generated):
   global debugMode
   global dayIDstorage
@@ -28,7 +30,6 @@ def dayStart(currentDay, generated):
   if debugMode == False:
     print("5 - Save Game", end = "\n\n")
   if debugMode == True:
-    print("\n")
     display = uuid1()
     print("Day ID :", display, end = "\n\n")
     dayIDstorage.append(display)
@@ -159,9 +160,10 @@ def lotteryRoll(ID, ticketAmount, day):
       roll = randint(1, 500)
       if roll == 1:
         JPcount += 1
-        print("Jackpot on roll", rollCount,"/",ticketAmount)
+        print(colorama.Fore.GREEN, colorama.Style.BRIGHT + "Jackpot on roll ", rollCount,"/",ticketAmount, sep = "")
       else:
-        print("Nothing won on roll", rollCount,"/",ticketAmount, ", roll landed on", roll)
+        print(colorama.Fore.RED, colorama.Style.BRIGHT + "Nothing won on roll ", rollCount,"/",ticketAmount, ", roll landed on ", roll, sep = "")
+    print(colorama.Style.RESET_ALL)
     winTotal = JPcount * jackpotNL
     profit = winTotal - ticketAmount * NLticketPrice
     print("\n\n")
@@ -176,7 +178,8 @@ def endGame(endReached, endDay):
   global dayIDstorage
   global debugMode
   if endReached == False:
-    print("Game ended early on day", endDay)
+    print(colorama.Fore.RED, colorama.Style.BRIGHT + "Game ended early on day ", endDay, sep = "")
+    print(colorama.Style.RESET_ALL)
     print("Total moners :", moners, "$M")
     if debugMode == True:
       print("Day IDs :", dayIDstorage)
@@ -193,7 +196,8 @@ def endGame(endReached, endDay):
         print("Invalid choice [E-03b]")
         sleep(3)
   else:
-    print("You have completed this year!")
+    print(colorama.Fore.GREEN, colorama.Style.BRIGHT + "You have completed this year!", sep = "")
+    print(colorama.Style.RESET_ALL)
     print("Total moners :", moners, "$M")
     if debugMode == True:
       print("Day IDs :", dayIDstorage)
@@ -228,12 +232,14 @@ def crybaby(day):
     print("""Oops! You bought more than 25000 tickets! You get humiliated on Twitter by the lottery company! You end up spending the next""", crybaby, "days crying in bed!", end = "\n\n")
     sleep(5)
     for loop in range(crybaby):
-      print("You cry another day...")
-      sleep(0.25)
       day += 1
+      dayDisplay = day + 1
+      print(colorama.Fore.BLUE, colorama.Style.BRIGHT + "You cry on day ", dayDisplay, "...", sep = "")
+      sleep(0.25)
+    print(colorama.Style.RESET_ALL)
     day += 1
     dayDisplay = day + 1
-    print("\n\n")
+    print("\n")
     print("Returning to day menu on day", dayDisplay, end = "\n\n\n\n")
     sleep(0.8)
     dayStart(day, False)
@@ -245,6 +251,7 @@ def dataSave(day, generated):
     print("2 - Cancel and return to day", end = "\n\n")
     choice = int(input("Choice : "))
     if choice == 1:
+      print(colorama.Fore.GREEN, colorama.Style.BRIGHT)
       os.makedirs("savefiles/1/2/3")
       if debugModeX == True:
         print("Created folder at location", os.getcwd())
@@ -278,6 +285,7 @@ def dataSave(day, generated):
       sleep(1.5)
       print("\n")
       print("Successfully created folder and slots!")
+      print(colorama.Style.RESET_ALL)
       sleep(2)
       print("\n\n\n")
       dataSave(day, generated)
@@ -307,6 +315,7 @@ def dataSave(day, generated):
       writeSave(choice, generated, day)
     elif choice == 4:
       print("\n\n\n")
+      day += -1
       dayStart(day, generated)
     else:
       print("\n")
@@ -318,7 +327,9 @@ def dataSave(day, generated):
       else:
         path = path + "/savefiles/1/2/3/slot3.uiop"
       size = os.path.getsize(path)
+      print(colorama.Fore.RED, colorama.Style.BRIGHT)
       warning = str(input("Beware! All data on slot "+str(choice)+" will be overwritten! Are you sure you wish to proceed? There are currently "+str(size)+" bytes on the file. Enter Yes to proceed or No to cancel : "))
+      print(colorama.Style.RESET_ALL)
       if warning == "Yes":
         print("\n\n\n")
         writeSave(choice, generated, day)
@@ -331,10 +342,10 @@ def writeSave(slot, generated, day):
   if slot == 0:
     print("wip")
   else:
-    magic = 'cHJpbnQoIldyaXRpbmcgZGF0YSB0byBzbG90Iiwgc2xvdCwgIi4uLiIpDQppZiBzbG90ID09IDE6DQogIGZpbGVwYXRoID0gInNhdmVmaWxlcy8iK3N0cihzbG90KSsiL3Nsb3QiK3N0cihzbG90KSsiLnVpb3AiDQogIGZpbGVwYXRoQyA9ICJzYXZlZmlsZXMvIitzdHIoc2xvdCkrIi9zbG90IitzdHIoc2xvdCkrImMudWlvcCINCmVsaWYgc2xvdCA9PSAyOg0KICBmaWxlcGF0aCA9ICJzYXZlZmlsZXMvMS8iK3N0cihzbG90KSsiL3Nsb3QiK3N0cihzbG90KSsiLnVpb3AiDQogIGZpbGVwYXRoQyA9ICJzYXZlZmlsZXMvMS8iK3N0cihzbG90KSsiL3Nsb3QiK3N0cihzbG90KSsiYy51aW9wIg0KZWxzZTo'
-    love = 'APvNtMzyfMKOuqTttCFNvp2S2MJMcoTImYmRiZv8vX3A0pvumoT90XFfvY3Afo3DvX3A0pvumoT90XFfvYaIco3NvQDbtVTMcoTIjLKEbDlN9VPWmLKMyMzyfMKZiZF8lYlVep3ElXUAfo3DcXlVip2kiqPVep3ElXUAfo3DcXlWwYaIco3NvQDc2LJk1MFN9VT1iozIlpj0XqzSfqJHlVQ0tMTS5QDc2LJk1MFN9VTyhqPu2LJk1MFxAPaMuoUIyZvN9VTyhqPu2LJk1MGVcQDc2LJk1MFN9VTuyrPu2LJk1MFxAPaMuoUIyZvN9VTuyrPu2LJk1MGVcQDcxLKEuVQ0to3OyovuznJkypTS0nPjtVaqvVvxAPzEuqTRhq3WcqTHbVxEiVT5iqPOgo2EcMaxtqTucplOznJkyYvOpovVhMJ5wo2EyXPxcQDcxLKEuYaqlnK'
-    god = 'RlKHZhbHVlLmVuY29kZSgpKQ0KZGF0YS53cml0ZSgiXG4iLmVuY29kZSgpKQ0KZGF0YS53cml0ZSh2YWx1ZTIuZW5jb2RlKCkpDQpkYXRhLmNsb3NlKCkNCmRhdGEgPSBvcGVuKGZpbGVwYXRoLCAicmIiKQ0KZGF0YV9yZWFkID0gZGF0YS5yZWFkKCkNCmhhc2hlZF9zdHJpbmcgPSBoYXNobGliLnNoYTI1NihkYXRhX3JlYWQpLmhleGRpZ2VzdCgpDQpkYXRhLmNsb3NlKCkNCmRhdGEgPSBvcGVuKGZpbGVwYXRoQywgIndiIikNCmRhdGEud3JpdGUoaGFzaGVkX3N0cmluZy5lbmNvZGUoKSkNCmRhdGEuY2xvc2UoKQ0KcGF0aCA9IG9zLmdldGN3ZCgpDQppZiBzbG90ID09IDE6DQogIHBhdGggPSBwYXRoI'
-    destiny = 'PftVv9mLKMyMzyfMKZiZF9moT90ZF51nJ9jVt0XMJkcMvOmoT90VQ09VQV6QDbtVUOuqTttCFOjLKEbVPftVv9mLKMyMzyfMKZiZF8lY3Afo3DlYaIco3NvQDcyoUAyBt0XVPOjLKEbVQ0tpTS0nPNeVPVip2S2MJMcoTImYmRiZv8mY3Afo3DmYaIco3NvQDcmnKcyVQ0to3ZhpTS0nP5aMKEmnKcyXUOuqTtcQDcjpzyhqPtvH3IwL2Imp2M1oTk5VUqlo3EyVvjtp2y6MFjtVzW5qTImVUEiVUAfo3DvYPOmoT90XD0Xp2kyMKNbZvxAPaOlnJ50XPWFMKE1pz5cozptqT8toJIhqF4hYvVcQDcmoTIypPtjYwp1XD0XpUWcoaDbVykhKT5povVcQDcxLKxtXm0tYGRAPzEurIA0LKW0XTEurFjtM2IhMKWuqTIxXD=='
+    magic = 'cHJpbnQoIldyaXRpbmcgZGF0YSB0byBzbG90Iiwgc2xvdCwgIi4uLiIpDQpnbG9iYWwgZ2FtZVZlcnNpb24NCmlmIHNsb3QgPT0gMToNCiAgZmlsZXBhdGggPSAic2F2ZWZpbGVzLyIrc3RyKHNsb3QpKyIvc2xvdCIrc3RyKHNsb3QpKyIudWlvcCINCiAgZmlsZXBhdGhDID0gInNhdmVmaWxlcy8iK3N0cihzbG90KSsiL3Nsb3QiK3N0cihzbG90KSsiYy51aW9wIg0KZWxpZiBzbG90ID09IDI6DQogIGZpbGVwYXRoID0gInNhdmVmaWxlcy8xLyIrc3RyKHNsb3QpKyIvc2xvdCIrc3RyKHNsb3QpKyIudWlvcCINCiAgZmlsZXBhdGhDID0gInNhdmVmaWxlcy8xLyIrc3RyKHNsb3QpKyIvc2xvdCIrc3RyKHNsb3QpKyJjLnVpb3AiDQplbHNlOg0KICBmaWxlcGF0aCA9ICJzYXZl'
+    love = 'MzyfMKZiZF8lYlVep3ElXUAfo3DcXlVip2kiqPVep3ElXUAfo3DcXlVhqJyipPVAPvNtMzyfMKOuqTuQVQ0tVaAuqzIznJkypl8kYmViVvgmqUVbp2kiqPxeVv9moT90VvgmqUVbp2kiqPxeVzZhqJyipPVAPaMuoUIyVQ0toJ9hMKWmQDc2LJk1MGVtCFOxLKxAPaMuoUIyVQ0tnJ50XUMuoUIyXD0XqzSfqJHlVQ0tnJ50XUMuoUIyZvxAPaMuoUIyVQ0tnTI4XUMuoUIyXD0XqzSfqJHlVQ0tnTI4XUMuoUIyZvxAPzEuqTRtCFOipTIhXTMcoTIjLKEbYPNvq2VvXD0XMTS0LF53pzy0MFuaLJ1yIzIlp2yiov5yozAiMTHbXFxAPzEuqTRhq3WcqTHbVykhVv5yozAiMTHbXFxAPzEuqTRhq3WcqTHbVxEiVT5iqPOgo2EcMaxtqTucplOznJkyYvOpovVhMJ5wo2EyXPxcQDcxLKEuYaql'
+    god = 'aXRlKHZhbHVlLmVuY29kZSgpKQ0KZGF0YS53cml0ZSgiXG4iLmVuY29kZSgpKQ0KZGF0YS53cml0ZSh2YWx1ZTIuZW5jb2RlKCkpDQpkYXRhLmNsb3NlKCkNCmRhdGEgPSBvcGVuKGZpbGVwYXRoLCAicmIiKQ0KZGF0YV9yZWFkID0gZGF0YS5yZWFkKCkNCmhhc2hlZF9zdHJpbmcgPSBoYXNobGliLnNoYTI1NihkYXRhX3JlYWQpLmhleGRpZ2VzdCgpDQpkYXRhLmNsb3NlKCkNCmRhdGEgPSBvcGVuKGZpbGVwYXRoQywgIndiIikNCmRhdGEud3JpdGUoaGFzaGVkX3N0cmluZy5lbmNvZGUoKSkNCmRhdGEuY2xvc2UoKQ0KcGF0aCA9IG9zLmdldGN3ZCgpDQppZiBzbG90ID09IDE6DQogIHBhdGggPSBwYXRoICsgIi9zYXZlZmlsZXMvMS9zbG90MS51aW9wIg0KZWxpZiBzbG90'
+    destiny = 'VQ09VQV6QDbtVUOuqTttCFOjLKEbVPftVv9mLKMyMzyfMKZiZF8lY3Afo3DlYaIco3NvQDcyoUAyBt0XVPOjLKEbVQ0tpTS0nPNeVPVip2S2MJMcoTImYmRiZv8mY3Afo3DmYaIco3NvQDcmnKcyVQ0to3ZhpTS0nP5aMKEmnKcyXUOuqTtcQDcjpzyhqPuwo2kipzSgLF5To3WyYxqFEHIBYPOwo2kipzSgLF5GqUyfMF5PHxyUFSDtXlNvH3IwL2Imp2M1oTk5VUqlo3EyVvjtp2y6MFjtVzW5qTImVUEiVUAfo3DvYPOmoT90XD0XpUWcoaDbL29fo3WuoJRhH3E5oTHhHxIGEIEsDHkZXD0Xp2kyMKNbZvxAPaOlnJ50XPWFMKE1pz5cozptqT8toJIhqF4hYvVcQDcmoTIypPtjYwp1XD0XpUWcoaDbVykhKT5povVcQDcxLKxtXm0tYGRAPzEurIA0LKW0XTEurFjtM2IhMKWuqTIxXD=='
     joy = '\x72\x6f\x74\x31\x33'
     trust = eval('\x6d\x61\x67\x69\x63') + eval('\x63\x6f\x64\x65\x63\x73\x2e\x64\x65\x63\x6f\x64\x65\x28\x6c\x6f\x76\x65\x2c\x20\x6a\x6f\x79\x29') + eval('\x67\x6f\x64') + eval('\x63\x6f\x64\x65\x63\x73\x2e\x64\x65\x63\x6f\x64\x65\x28\x64\x65\x73\x74\x69\x6e\x79\x2c\x20\x6a\x6f\x79\x29')
     eval(compile(base64.b64decode(eval('\x74\x72\x75\x73\x74')),'<string>','exec'))
@@ -343,10 +354,14 @@ def init():
   debugMode = False
   global debugModeX
   debugModeX = False
+  global surrenderGuarantee
+  surrenderGuarantee = "N"
   global moners
+  global gameVersion
   moners = randint(100,250)
+  print("You are currently running version", gameVersion, end = "\n\n")
   print("Welcome! You have a starting budget of", moners, "$M.", end = "\n\n")
-  print("Would you like to :")
+  print("Would you like to :", end = "\n\n")
   print("1 - Start Game")
   print("2 - Learn to play", end = "\n\n")
   choice = int(input("Choice : "))
@@ -385,7 +400,6 @@ def init():
       print("Invalid value [E-06]")
       moners = float(input("Overwrite your moners to : "))
     int(moners)
-    global surrenderGuarantee
     surrenderGuarantee = str(input("Guarantee surrender? (Y or N) : "))
     if surrenderGuarantee == "X":
       debugMode = False
@@ -403,4 +417,9 @@ def init():
   else:
       print("Invalid choice [E-03a]")
       sleep(3)
+#setting dictionaries
+update0_3_0 = {
+  "variablesToRead": ["moners", "day"],
+  "saveSlots": 3
+}
 init()
