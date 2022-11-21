@@ -40,3 +40,7 @@ Note that E-03x errors and E-08 error terminate the program.
   E-08 :
     Cause : Happens when a negative value is entered in the lottery purchase amount menu.
     Fix : Enter a positive value.
+  E-09 :
+    Cause : Happens when there was no working internet connection during initialization, preventing the program from checking for updates.
+    Extra information : Will display a yellow message briefly explaining the encountered error.
+    Fix : Connect to a working WiFi network.

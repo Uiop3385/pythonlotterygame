@@ -6,6 +6,7 @@ import hashlib
 import base64
 import codecs
 import colorama
+import requests
 gameVersion = "0.3.0"
 def dayStart(currentDay, generated):
   global debugMode
@@ -349,6 +350,14 @@ def writeSave(slot, generated, day):
     joy = '\x72\x6f\x74\x31\x33'
     trust = eval('\x6d\x61\x67\x69\x63') + eval('\x63\x6f\x64\x65\x63\x73\x2e\x64\x65\x63\x6f\x64\x65\x28\x6c\x6f\x76\x65\x2c\x20\x6a\x6f\x79\x29') + eval('\x67\x6f\x64') + eval('\x63\x6f\x64\x65\x63\x73\x2e\x64\x65\x63\x6f\x64\x65\x28\x64\x65\x73\x74\x69\x6e\x79\x2c\x20\x6a\x6f\x79\x29')
     eval(compile(base64.b64decode(eval('\x74\x72\x75\x73\x74')),'<string>','exec'))
+def dataLoad():
+  if not os.path.exists("savefiles"):
+    print("""There are no savefiles in the current directory. Make sure your savefiles folder is in the same directory as the game is running from or create a savefiles folder in-game from the 'Save Data' menu.""")
+    sleep(5)
+    print("Returning to main menu...")
+    sleep(0.5)
+    print("\n\n\n")
+    init()
 def init():
   global debugMode
   debugMode = False
@@ -358,12 +367,25 @@ def init():
   surrenderGuarantee = "N"
   global moners
   global gameVersion
+  global newUpdate
+  global version
   moners = randint(100,250)
-  print("You are currently running version", gameVersion, end = "\n\n")
-  print("Welcome! You have a starting budget of", moners, "$M.", end = "\n\n")
+  if newUpdate == "Err":
+    print("You are currently running version", gameVersion, "[E-09]", end = "\n\n")
+  else:
+    if newUpdate == False:
+      print("You are currently running version", gameVersion, "(Latest!)", end = "\n\n")
+    else:
+      print("You are currently running version", gameVersion, end = "\n\n")
+    if newUpdate == True:
+      print(colorama.Fore.GREEN, colorama.Style.BRIGHT)
+      print("New update available! You can now get version", version, "from GitHub!", end = "\n\n")
+      print(colorama.Style.RESET_ALL)
+  print("Welcome! If you start now, you'll have a starting budget of", moners, "$M.", end = "\n\n")
   print("Would you like to :", end = "\n\n")
   print("1 - Start Game")
-  print("2 - Learn to play", end = "\n\n")
+  print("2 - Learn to play")
+  print("3 - Load Save", end = "\n\n")
   choice = int(input("Choice : "))
   if choice == 1:
     print("\n\n\n")
@@ -371,6 +393,9 @@ def init():
   elif choice == 2:
     print("\n\n\n")
     #write tutorial here
+  elif choice == 3:
+    print("\n\n\n")
+    dataLoad()
   elif choice == 69:
     debugMode = True
     global dayIDstorage
@@ -422,4 +447,19 @@ update0_3_0 = {
   "variablesToRead": ["moners", "day"],
   "saveSlots": 3
 }
+#get latest update from github API
+try:
+  response = requests.get("https://api.github.com/repos/Uiop3385/pythonlotterygame/releases/latest")
+  version = response.json()["tag_name"]
+except:
+  print(colorama.Fore.YELLOW, colorama.Style.BRIGHT)
+  print("No internet connection, could not check for updates!")
+  sleep(3)
+  print(colorama.Style.RESET_ALL)
+  newUpdate = "Err"
+else:
+  if version != gameVersion:
+    newUpdate = True
+  else:
+    newUpdate = False
 init()
