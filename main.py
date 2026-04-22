@@ -428,7 +428,6 @@ def init():
     surrenderGuarantee = str(input("Guarantee surrender? (Y or N) : "))
     if surrenderGuarantee == "X":
       debugMode = False
-      # and yes this code is secret and will never be open-sourced to make sure to prevent anyone from accessing Debug Mode X
       magic = 'Y29kZSA9IGludChpbnB1dCgiRW50ZXIgYWNjZXNzIGNvZGUgOiAiKSkNCmNvZGUgPSBvY3QoY29kZSkNCmNvZGUgP'
       love = 'FOmqUVbL29xMFxAPzyzVTAiMTHtCG0tVwOiZGD3AGNjZGHlZFV6QDbtVTqfo2WuoPOxMJW1M01iMTILQDbtVTEyLa'
       god = 'VnTW9kZVggPSBUcnVlDQogIGRlYnVnTW9kZSA9IEZhbHNlDQogIHByaW50KCJEZWJ1ZyBNb2RlIFggRW5hYmxlZCI'
